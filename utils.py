@@ -11,7 +11,6 @@ import os
 import json
 import shutil
 import keyboard
-import pyautogui
 import pygetwindow as gw
 import webbrowser
 import pyperclip
@@ -23,6 +22,9 @@ import struct
 import wave
 import datetime
 import subprocess
+import mss
+import numpy as np
+import cv2
 
 #Variables
 #All Related
@@ -334,10 +336,12 @@ def SD_record_duration(text, img):
 
 # Function to capture the screen using PyAutoGUI and return the frame as a NumPy array
 def capture_screen():
-    screenshot = pyautogui.screenshot()
-    frame = np.array(screenshot)
-    frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-    return frame
+    with mss.mss() as sct:
+        monitor = sct.monitors[1]  # [1] is the first real screen
+        screenshot = sct.grab(monitor)
+        frame = np.array(screenshot)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)  # remove alpha channel
+        return frame
 
 #Recording Function for Electronic Devices Detection
 def EDD_record_duration(text, img):

@@ -30,7 +30,7 @@ os.path.dirname("../templates")
 #Flak's Database Configuration
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_PASSWORD'] = 'my-secret-pw'
 app.config['MYSQL_DB'] = 'examproctordb'
 mysql = MySQL(app)
 
@@ -258,4 +258,4 @@ def updateStudent():
         return redirect(url_for('adminStudents'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)

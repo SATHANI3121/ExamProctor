@@ -4,33 +4,38 @@ FROM python:3.10-slim
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV DISPLAY=:99
 
 # Set work directory
 WORKDIR /app
 
-# Install system dependencies (needed for numpy, dlib, etc.)
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
     libgl1-mesa-glx \
     libglib2.0-0 \
+    python3-dev \
+    pkg-config \
+    libmariadb-dev-compat \
+    xvfb \
+    x11-utils \
+    x11-apps \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirement files and wheel
+# Install Python dependencies
 COPY requirements.txt .
-COPY dlib-19.22.99-cp310-cp310-win_amd64.whl .
-
-# Install dlib from the local wheel first
-RUN pip install dlib-19.22.99-cp310-cp310-win_amd64.whl
-
-# Then install remaining requirements
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir face_recognition pyautogui
 
-# Copy the entire project
+# Copy the full application
 COPY . .
 
-# Expose the port (Flask default)
+#COPY start.sh .
+#CMD ["./start.sh"]
+
+CMD ["python", "app.py"]
+
+# Expose the Flask port
 EXPOSE 5000
 
-# Run the application
-CMD ["python", "app.py"]
