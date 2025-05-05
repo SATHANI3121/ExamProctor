@@ -753,7 +753,7 @@ class Recorder:
                                   channels=CHANNELS,
                                   rate=RATE,
                                   input=True,
-                                  output=True,
+                                #   output=True,
                                   frames_per_buffer=CHUNK)
         self.time = time.time()
         self.quiet = []

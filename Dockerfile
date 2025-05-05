@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y \
     python3-dev \
     pkg-config \
     libmariadb-dev-compat \
+    portaudio19-dev \
     xvfb \
     x11-utils \
     x11-apps \
@@ -25,17 +26,17 @@ RUN apt-get update && apt-get install -y \
 
 # Install Python dependencies
 COPY requirements.txt .
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir face_recognition pyautogui
+
+# Install extra Python packages separately (some may require C++ builds)
+RUN pip install --no-cache-dir face_recognition pyautogui ultralytics pyaudio mss 
 
 # Copy the full application
 COPY . .
 
-#COPY start.sh .
-#CMD ["./start.sh"]
-
+# Default command
 CMD ["python", "app.py"]
 
 # Expose the Flask port
 EXPOSE 5000
-
