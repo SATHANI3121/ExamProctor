@@ -11,7 +11,6 @@ import os
 import json
 import shutil
 import keyboard
-import pygetwindow as gw
 import webbrowser
 import pyperclip
 from ultralytics import YOLO
@@ -681,11 +680,17 @@ def shortcut_handler(event):
             print("Ctrl+Z shortcut detected!")
         shorcuts.append(shortcut) if shortcut != "" else None
 
+def get_active_window_title():
+    try:
+        window_title = subprocess.check_output(['xdotool', 'getactivewindow', 'getwindowname'])
+        return window_title.decode('utf-8').strip()
+    except subprocess.CalledProcessError:
+        return None
 def screenDetection():
     global active_window, active_window_title, exam_window_title
     textScreen = ""
     # Get the current active window
-    new_active_window = gw.getActiveWindow()
+    new_active_window = get_active_window_title()
     frame = capture_screen()
 
     # Check if the active window has changed
